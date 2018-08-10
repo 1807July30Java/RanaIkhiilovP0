@@ -14,3 +14,4 @@
 2018-08-10 16:48:30 INFO  root:120 - retrieved bank accounts[]
 2018-08-10 16:50:48 INFO  root:122 - retrieved bank accounts[BankAccount [id=2, userAccountId=22, currentBalance=0.0], BankAccount [id=3, userAccountId=22, currentBalance=500.0]]
 2018-08-10 16:58:17 INFO  root:122 - retrieved bank accounts[BankAccount [id=2, userAccountId=22, currentBalance=0.0], BankAccount [id=3, userAccountId=22, currentBalance=500.0]]
+2018-08-10 17:34:19 INFO  root:122 - retrieved bank accounts[BankAccount [id=2, userAccountId=22, currentBalance=0.0], BankAccount [id=3, userAccountId=22, currentBalance=500.0]]

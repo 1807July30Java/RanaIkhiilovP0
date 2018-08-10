@@ -245,5 +245,9 @@ $RECYCLE.BIN/
 #ignore target
 target/
 
-#ignore proporties file
+#ignore properties file
 /connection.properties
+
+#ignore log file
+/src/log.txt
+
