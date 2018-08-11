@@ -9,5 +9,6 @@ public interface UserAccountDAO {
 	public List<UserAccount> getUsers();
 	public UserAccount getUserAccountById(int id);
 	public boolean saveUserAccount(UserAccount u);
+	public boolean isExistingUser(UserAccount u);
 	
 }

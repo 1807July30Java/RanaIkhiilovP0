@@ -100,6 +100,42 @@ public class UserAccountDAOImpl implements UserAccountDAO{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		System.out.println("Please enter valid inputs");
+		return false;
+	}
+
+	@Override
+	public boolean isExistingUser(UserAccount u) {
+		
+		PreparedStatement pstmt = null;
+		try (Connection con = ConnectionUtil.getConnectionFromFile(filename)) {
+
+			// use a prepared statement
+			String sql = "SELECT * FROM USER_ACCOUNT WHERE USERNAME = ? AND PASSWORD = ? ";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, u.getUsername().trim());
+			pstmt.setString(2, u.getPassword().trim());
+			
+			ResultSet rs = pstmt.executeQuery();
+
+			// do something with result
+			if (rs.next()) {
+				int id = rs.getInt("USER_ACCOUNT_ID");
+				u.setId(id);
+				u.setUserSuper(rs.getInt("USER_ACCOUNT_SUPER"));
+				log.info("Retrieved user with id "+id);
+				
+				return true;
+			} else {
+				log.warn("No matching user found");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		return false;
 	}
