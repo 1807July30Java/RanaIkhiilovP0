@@ -10,6 +10,11 @@ public class BankAccount {
 		super();
 	}
 	
+	public BankAccount(int userAccountId) {
+		super();
+		this.userAccountId = userAccountId;
+	}
+	
 	public BankAccount(int userAccountId, double currentBalance) {
 		super();
 		this.userAccountId = userAccountId;
@@ -71,7 +76,7 @@ public class BankAccount {
 	}
 	@Override
 	public String toString() {
-		return "BankAccount [id=" + id + ", userAccountId=" + userAccountId + ", currentBalance=" + currentBalance
-				+ "]";
+		String baInfo = id + "\t\t" + currentBalance;
+		return baInfo;
 	}
 }

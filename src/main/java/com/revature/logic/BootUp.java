@@ -1,15 +1,105 @@
 package com.revature.logic;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import com.revature.beans.*;
 import com.revature.dao.*;
 
 public class BootUp {
 	
-//	public void loginMenu(UserAccount u) {
-//		
-//	}
-//	
+	private static int MENU_OPTIONS = 3;
+	private static int BANK_MENU_OPTIONS = 4;
+	
+	public boolean bankAccountMenu(BankAccount b) {
+		
+		boolean exitCondition = false;
+		int userChoice = -1;
+		// display menu for bank account options 
+		while(!exitCondition) {
+			System.out.println("Current Balance\t" + b.getCurrentBalance()
+					+ "1) Withdraw"
+					+ "\n2) Deposit"
+					+ "\n3) View Transactions"
+					+ "\n4) Return to Account Menu"
+					+ "\n0) Exit Revature Bank");
+			userChoice = getInput(BANK_MENU_OPTIONS);
+			switch(userChoice) {
+				case 0:
+					return true;
+				case 1:
+					
+					break;
+				case 2: 
+					
+					break;
+				
+			}
+		}
+		
+		// view transactions
+		
+		// withdraw
+		
+		// deposit
+		
+		//exit
+		
+		
+		
+		
+		
+		return false;
+	}
+	public void loginMenu(UserAccount u) {
+		
+		
+		// get useraccount primary key id
+		int userID = u.getId();
+		boolean exitCondition = false;
+		int userChoice = -1;
+		int bankAccountChoice = -1;
+		
+		BankAccountDAOImpl baDAO = new BankAccountDAOImpl();
+		ArrayList<BankAccount> userBankAccounts = baDAO.getAllBankAccountsForUser(userID);
+		
+		while(!exitCondition) {
+			System.out.println("1) View and Access Exisitng Bank Accounts."
+					+ "\n2) Create New Bank Account"
+					+ "\n0) Exit");
+			userChoice = getInput(MENU_OPTIONS);
+			switch(userChoice) {
+				case 0:
+					exitCondition = true;
+					System.out.println("Thank you for using Revature Bank!");
+					break;
+				case 1:
+					int count = 1;
+					
+					if(userBankAccounts.isEmpty()) {
+						System.out.println("No bank accounts Exist\n");
+						break;
+					}else {
+						System.out.println("Selection\tBank id\t\tBalance");
+						for(BankAccount currAccount : userBankAccounts) {
+							System.out.println(count++ +")\t\t" +currAccount);
+						}
+						System.out.println("\nPLEASE CHOOSE A BANK ACCOUNT TO ACCESS");
+						//bankAccountChoice = getInput(userBankAccounts.size());
+						
+						exitCondition = true;
+					}
+					break;
+				case 2: 
+					BankAccount newAcc = new BankAccount(userID);
+					baDAO.saveBankAccount(newAcc);
+					userBankAccounts = baDAO.getAllBankAccountsForUser(userID);
+					System.out.println("Bank Account successfully created!");
+					break;
+				
+			}
+		}
+	}
+	
 	
 	public UserAccount init() {
 		
@@ -22,9 +112,9 @@ public class BootUp {
 			
 			System.out.println("Welcome to revature bank");
 			System.out.println("Enter numberical option on menu corresponding to your choice.");
-			System.out.println("1.Login\n2.Register\n0.Exit");
+			System.out.println("1) Login\n2) Register\n0) Exit");
 		
-			input = getInput();
+			input = getInput(MENU_OPTIONS);
 			
 			switch(input) {
 				case 0:
@@ -44,7 +134,6 @@ public class BootUp {
 					if(loginDAO.isExistingUser(login)){
 						isLoggedIn = true;
 						System.out.println("Logging in...");
-						System.out.println(login);
 						
 						return login;
 					}
@@ -66,6 +155,7 @@ public class BootUp {
 					System.out.println("Checking Account Validity...");
 					if(registerDAO.saveUserAccount(register)) {
 						System.out.println("Thank you for registering with Revature Bank!\nLogging in...");
+						registerDAO.isExistingUser(register);
 						isLoggedIn = true;
 						return register;
 					}
@@ -79,7 +169,7 @@ public class BootUp {
 	}
 	
 	
-	public int getInput() {
+	public int getInput(int maxInput) {
 		
 		String input = "";
 		boolean inputStatus = false;
@@ -90,9 +180,9 @@ public class BootUp {
 				Scanner scanner = new Scanner(System.in);
 				input = scanner.nextLine();
 				
-				if(input.length() ==1 ) {
+				inputCheck = Integer.parseInt(input);
+				if(inputCheck < maxInput && inputCheck >= 0 ) {
 					inputStatus = true;
-					inputCheck = Integer.parseInt(input);
 				}
 				else {
 					System.out.println("Please enter a valid numerical input");

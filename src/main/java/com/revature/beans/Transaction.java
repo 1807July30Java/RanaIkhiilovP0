@@ -1,16 +1,25 @@
 package com.revature.beans;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import java.sql.Date;
 
 public class Transaction {
 	public Transaction() {
 		super();
 	}
 	
-	public Transaction(int bankAccountId, String date, double previousBalance, double newBalance, double value,
+	public Transaction(int id, Date date, double previousBalance, double newBalance, double value,
 			String type) {
+		super();
+		this.id = id;
+		this.date = date;
+		this.previousBalance = previousBalance;
+		this.newBalance = newBalance;
+		this.value = value;
+		this.type = type;
+	}
+	
+	public Transaction(Date date, double previousBalance, double newBalance, double value,
+			String type, int bankAccountId) {
 		super();
 		this.bankAccountId = bankAccountId;
 		this.date = date;
@@ -19,7 +28,9 @@ public class Transaction {
 		this.value = value;
 		this.type = type;
 	}
-	public Transaction(int id, int bankAccountId, String date, double previousBalance, double newBalance, double value,
+	
+	
+	public Transaction(int id, int bankAccountId, Date date, double previousBalance, double newBalance, double value,
 			String type) {
 		super();
 		this.id = id;
@@ -33,7 +44,7 @@ public class Transaction {
 	
 	private int id;
 	private int bankAccountId;
-	private String date;
+	private Date date;
 	private double previousBalance;
 	private double newBalance;
 	private double value;
@@ -101,10 +112,10 @@ public class Transaction {
 	public void setBankAccountId(int bankAccountId) {
 		this.bankAccountId = bankAccountId;
 	}
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 	public double getPreviousBalance() {

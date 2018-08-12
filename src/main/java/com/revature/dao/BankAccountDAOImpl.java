@@ -84,13 +84,11 @@ public class BankAccountDAOImpl implements BankAccountDAO {
 		PreparedStatement pstmt = null;
 
 		try (Connection con = ConnectionUtil.getConnectionFromFile(filename)) {
-			String sql = "INSERT INTO BANK_ACCOUNT (USER_ACCOUNT_ID, CURRENT_BALANCE) VALUES (?, ?)";
+			String sql = "INSERT INTO BANK_ACCOUNT (USER_ACCOUNT_ID) VALUES (?)";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, b.getUserAccountId());
-			pstmt.setDouble(2, b.getCurrentBalance());
 			if (pstmt.executeUpdate() > 0) {
-				log.info("added bank account to db with User Account id: " + b.getUserAccountId()
-				+ " and balance: " + b.getCurrentBalance());
+				log.info("added bank account to db with User Account id:" + b.getUserAccountId());
 				return true;
 			}
 		} catch (SQLException e) {
@@ -104,8 +102,8 @@ public class BankAccountDAOImpl implements BankAccountDAO {
 	
 
 	@Override
-	public List<BankAccount> getAllBankAccountsForUser(int userId) {
-		List<BankAccount> bl = new ArrayList<>();
+	public ArrayList<BankAccount> getAllBankAccountsForUser(int userId) {
+		ArrayList<BankAccount> bl = new ArrayList<>();
 		try(Connection con = ConnectionUtil.getConnectionFromFile(filename)){
 			String sql = "SELECT * FROM BANK_ACCOUNT b"
 					+ " INNER JOIN USER_ACCOUNT u ON b.USER_ACCOUNT_ID = u.USER_ACCOUNT_ID"

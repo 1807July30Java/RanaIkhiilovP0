@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -95,11 +96,13 @@ public class UserAccountDAOImpl implements UserAccountDAO{
 				log.info("added user to db with username: " + u.getUsername() + " and password: " + u.getPassword());
 				return true;
 			}
-		} catch (SQLException e) {
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println("Username already exists");
+		}catch (SQLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} 
 		
 		System.out.println("Please enter valid inputs");
 		return false;

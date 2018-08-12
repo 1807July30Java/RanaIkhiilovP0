@@ -1,6 +1,7 @@
 package com.revature.main;
 
 import com.revature.beans.*;
+import com.revature.dao.*;
 import com.revature.logic.BootUp;
 
 
@@ -12,9 +13,13 @@ public class Driver {
 		UserAccount user = new UserAccount();
 		user = boot.init();
 		
-//		if (user != null){
-//			boot.loginMenu(user);
-//		}
+		if (user != null){
+			boot.loginMenu(user);
+		}
+//		
+//		TransactionDAO t = new TransactionDAOImpl();
+//		Transaction temp = new Transaction();
+//		t.saveTransaction(temp)
 		
 	}
 
