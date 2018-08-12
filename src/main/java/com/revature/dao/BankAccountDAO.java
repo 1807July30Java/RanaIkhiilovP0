@@ -11,5 +11,6 @@ public interface BankAccountDAO {
 	public BankAccount getBankAccountByBankAccountId(int id);
 	public boolean saveBankAccount(BankAccount u);
 	public ArrayList<BankAccount> getAllBankAccountsForUser(int userID);
+	public void updateBalance(int bankId, double balance);
 	
 }

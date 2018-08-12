@@ -127,4 +127,27 @@ public class BankAccountDAOImpl implements BankAccountDAO {
 		return bl;
 	}
 
+	@Override
+	public void updateBalance(int bankId, double balance) {
+		
+		PreparedStatement pstmt = null;
+
+		try (Connection con = ConnectionUtil.getConnectionFromFile(filename)) {
+			String sql = "UPDATE BANK_ACCOUNT SET CURRENT_BALANCE = ? WHERE BANK_ACCOUNT_ID = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(2, bankId);
+			pstmt.setDouble(1, balance);
+			if (pstmt.executeUpdate() > 0) {
+				log.info("Updated Current Balance to db with Bank Account id:" + bankId);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return;
+		
+	}
+
 }

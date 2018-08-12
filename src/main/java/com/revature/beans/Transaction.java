@@ -153,7 +153,7 @@ public class Transaction {
 
 	@Override
 	public String toString() {
-		String transactionOutput = id + "\t\t" + date + "\t\t" + previousBalance + "\t\t" + value + "\t\t"  + newBalance + "\t\t" + type; 
+		String transactionOutput = id + "\t\t" + date + "\t" + previousBalance + "\t\t\t" + value + "\t\t"  + newBalance + "\t\t" + type; 
 		return transactionOutput;
 	}
 	

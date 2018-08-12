@@ -17,7 +17,7 @@ public class BootUp {
 		// display menu for bank account options 
 		while(!exitCondition) {
 			System.out.println("Current Balance\t" + b.getCurrentBalance()
-					+ "1) Withdraw"
+					+ "\n1) Withdraw"
 					+ "\n2) Deposit"
 					+ "\n3) View Transactions"
 					+ "\n4) Return to Account Menu"
@@ -40,6 +40,9 @@ public class BootUp {
 						TransactionDAO withdrawDAO = new TransactionDAOImpl();
 						withdrawDAO.withdraw(temp);
 						if(withdrawDAO.saveTransaction(temp)) {
+							b.setCurrentBalance(updatedBalance);
+							BankAccountDAO updateBalance = new BankAccountDAOImpl();
+							updateBalance.updateBalance(b.getId(), updatedBalance);
 							System.out.println("Successful withdrawl! Please take your money.");
 						}
 					}
@@ -49,18 +52,22 @@ public class BootUp {
 					System.out.println("Please enter how much you would like to deposit");
 					double deposit = getNumInput();
 					updatedBalance = b.getCurrentBalance() + deposit;
-					b.setCurrentBalance(updatedBalance);
 					Transaction temp = new Transaction(b.getId(), b.getCurrentBalance(), updatedBalance, deposit, "D");
 					TransactionDAO depositDAO = new TransactionDAOImpl();
 					depositDAO.deposit(temp);
-					if(depositDAO.saveTransaction(temp))
+					if(depositDAO.saveTransaction(temp)) {
+						b.setCurrentBalance(updatedBalance);
 						System.out.println("Successful Deposit!");
+						BankAccountDAO updateBalance = new BankAccountDAOImpl();
+						updateBalance.updateBalance(b.getId(), b.getCurrentBalance());
+					}
+						
 					break;
 				case 3:
 					ArrayList<Transaction>allTransactions = new ArrayList<Transaction>();
 					TransactionDAO tDAO = new TransactionDAOImpl();
 					allTransactions = tDAO.accountTransactionHistory(b.getId());
-					System.out.println( "id \t\t date \t\t previousBalance \t\t value \t\t newBalance \t\t type");
+					System.out.println( "id \t\tdate \t\tpreviousBalance \tvalue \t\tnewBalance \ttype");
 					for(Transaction currTransaction : allTransactions) {
 						System.out.println(currTransaction);
 					}
@@ -255,19 +262,27 @@ public class BootUp {
 	}
 	
 	public double getNumInput() {
-		Double input = 0.0;
+		String input = "";
 		boolean inputStatus = false;
+		double inputCheck = 0.0;
 		
 		while(!inputStatus) {
 			try {
 				Scanner scanner = new Scanner(System.in);
-				input = scanner.nextDouble();
+				if (scanner.hasNextLine()) {
+				input = scanner.nextLine();
+				}
+				else {
+					System.out.println("bug is here");
+					return 0;
+				}
 				
-				if (input > 0) {
-					scanner.close();
-					return input;
-				}else {
-					System.out.println("Please enter a valid numerical input");
+				inputCheck = Double.parseDouble(input);
+				if(inputCheck >= 0 ) {
+					inputStatus = true;
+				}
+				else {
+					System.out.println("Please enter a valid numerical input231231");
 					break;
 				}
 			}catch(Exception e) {
@@ -275,7 +290,8 @@ public class BootUp {
 				System.out.println("Please enter a valid numerical input");
 				break;
 			}
+			
 		}
-		return input;
+		return inputCheck;
 	}
 }
