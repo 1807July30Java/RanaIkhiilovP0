@@ -13,7 +13,7 @@ public class BootUp {
 	public boolean bankAccountMenu(BankAccount b) {
 		
 		boolean exitCondition = false;
-		int userChoice = -1;
+		Integer userChoice = -1;
 		// display menu for bank account options 
 		while(!exitCondition) {
 			System.out.println("Current Balance\t" + b.getCurrentBalance()
@@ -23,29 +23,50 @@ public class BootUp {
 					+ "\n4) Return to Account Menu"
 					+ "\n0) Exit Revature Bank");
 			userChoice = getInput(BANK_MENU_OPTIONS);
+		
 			switch(userChoice) {
 				case 0:
+					System.out.println("Thank you for using Revature Bank!");
 					return true;
 				case 1:
-					
+					System.out.println("Please enter how much you would like to withdraw");
+					double withdraw = getNumInput();
+					double updatedBalance = b.getCurrentBalance() - withdraw;
+					if (updatedBalance < 0) {
+						System.out.println("Oh nooo baby what is you doing");
+						break;
+					}else {
+						Transaction temp = new Transaction(b.getId(), b.getCurrentBalance(), updatedBalance, withdraw, "W");
+						TransactionDAO withdrawDAO = new TransactionDAOImpl();
+						withdrawDAO.withdraw(temp);
+						if(withdrawDAO.saveTransaction(temp)) {
+							System.out.println("Successful withdrawl! Please take your money.");
+						}
+					}
+						
 					break;
 				case 2: 
-					
+					System.out.println("Please enter how much you would like to deposit");
+					double deposit = getNumInput();
+					updatedBalance = b.getCurrentBalance() + deposit;
+					b.setCurrentBalance(updatedBalance);
+					Transaction temp = new Transaction(b.getId(), b.getCurrentBalance(), updatedBalance, deposit, "D");
+					TransactionDAO depositDAO = new TransactionDAOImpl();
+					depositDAO.deposit(temp);
+					if(depositDAO.saveTransaction(temp))
+						System.out.println("Successful Deposit!");
 					break;
-				
+				case 3:
+					ArrayList<Transaction>allTransactions = new ArrayList<Transaction>();
+					TransactionDAO tDAO = new TransactionDAOImpl();
+					allTransactions = tDAO.accountTransactionHistory(b.getId());
+					System.out.println( "id \t\t date \t\t previousBalance \t\t value \t\t newBalance \t\t type");
+					for(Transaction currTransaction : allTransactions) {
+						System.out.println(currTransaction);
+					}
+					break;
 			}
 		}
-		
-		// view transactions
-		
-		// withdraw
-		
-		// deposit
-		
-		//exit
-		
-		
-		
 		
 		
 		return false;
@@ -76,7 +97,7 @@ public class BootUp {
 					int count = 1;
 					
 					if(userBankAccounts.isEmpty()) {
-						System.out.println("No bank accounts Exist\n");
+						System.out.println("No bank accounts exist\n");
 						break;
 					}else {
 						System.out.println("Selection\tBank id\t\tBalance");
@@ -84,9 +105,10 @@ public class BootUp {
 							System.out.println(count++ +")\t\t" +currAccount);
 						}
 						System.out.println("\nPLEASE CHOOSE A BANK ACCOUNT TO ACCESS");
-						//bankAccountChoice = getInput(userBankAccounts.size());
+						bankAccountChoice = getInput(userBankAccounts.size() + 1);
 						
-						exitCondition = true;
+						if(bankAccountMenu(userBankAccounts.get(bankAccountChoice -1)))
+							exitCondition = true;
 					}
 					break;
 				case 2: 
@@ -115,7 +137,6 @@ public class BootUp {
 			System.out.println("1) Login\n2) Register\n0) Exit");
 		
 			input = getInput(MENU_OPTIONS);
-			
 			switch(input) {
 				case 0:
 					exit = true;
@@ -178,21 +199,27 @@ public class BootUp {
 		while(!inputStatus) {
 			try {
 				Scanner scanner = new Scanner(System.in);
+				if (scanner.hasNextLine()) {
 				input = scanner.nextLine();
+				}
+				else {
+					System.out.println("bug is here");
+					return 0;
+				}
 				
 				inputCheck = Integer.parseInt(input);
 				if(inputCheck < maxInput && inputCheck >= 0 ) {
 					inputStatus = true;
 				}
 				else {
-					System.out.println("Please enter a valid numerical input");
+					System.out.println("Please enter a valid numerical input231231");
+					break;
 				}
-				
 			}catch(Exception e) {
+				e.printStackTrace();
 				System.out.println("Please enter a valid numerical input");
+				break;
 			}
-//			System.out.println(input);
-			
 			
 		}
 		return inputCheck;
@@ -217,10 +244,37 @@ public class BootUp {
 				
 			}catch(Exception e) {
 				System.out.println("Please enter a valid " + type);
+				e.printStackTrace();
+				break;
 			}
 //			System.out.println(input);
 			
 			
+		}
+		return input;
+	}
+	
+	public double getNumInput() {
+		Double input = 0.0;
+		boolean inputStatus = false;
+		
+		while(!inputStatus) {
+			try {
+				Scanner scanner = new Scanner(System.in);
+				input = scanner.nextDouble();
+				
+				if (input > 0) {
+					scanner.close();
+					return input;
+				}else {
+					System.out.println("Please enter a valid numerical input");
+					break;
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+				System.out.println("Please enter a valid numerical input");
+				break;
+			}
 		}
 		return input;
 	}

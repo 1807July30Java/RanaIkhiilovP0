@@ -17,6 +17,14 @@ public class Transaction {
 		this.value = value;
 		this.type = type;
 	}
+	public Transaction(int bankAccountId, double previousBalance, double newBalance, double value, String type) {
+		super();
+		this.bankAccountId = bankAccountId;
+		this.previousBalance = previousBalance;
+		this.newBalance = newBalance;
+		this.value = value;
+		this.type = type;
+	}
 	
 	public Transaction(Date date, double previousBalance, double newBalance, double value,
 			String type, int bankAccountId) {
@@ -141,6 +149,12 @@ public class Transaction {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	@Override
+	public String toString() {
+		String transactionOutput = id + "\t\t" + date + "\t\t" + previousBalance + "\t\t" + value + "\t\t"  + newBalance + "\t\t" + type; 
+		return transactionOutput;
 	}
 	
 	

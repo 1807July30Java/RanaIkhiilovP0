@@ -1,5 +1,12 @@
 package com.revature.main;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Calendar;
+
 import com.revature.beans.*;
 import com.revature.dao.*;
 import com.revature.logic.BootUp;
@@ -16,10 +23,8 @@ public class Driver {
 		if (user != null){
 			boot.loginMenu(user);
 		}
-//		
-//		TransactionDAO t = new TransactionDAOImpl();
-//		Transaction temp = new Transaction();
-//		t.saveTransaction(temp)
+		
+		//System.out.println(boot.getNumInput());
 		
 	}
 

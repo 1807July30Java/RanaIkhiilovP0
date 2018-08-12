@@ -1,12 +1,14 @@
 package com.revature.dao;
 
 import java.io.IOException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,10 +62,10 @@ public class TransactionDAOImpl implements TransactionDAO {
 		PreparedStatement pstmt = null;
 
 		try (Connection con = ConnectionUtil.getConnectionFromFile(filename)) {
-			String sql = "INSERT INTO TRANSACTION (BANK_ACCOUNT_ID, TRANSACTION_DATE, PREVIOUS_BALANCE, NEW_BALANCE, TRANSACTION_VALUE, TRANSACTION_TYPE) VALUES (?, ?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO TRANSACTION (BANK_ACCOUNT_ID, TRANSACTION_DATE, PREVIOUS_BALANCE, UPDATED_BALANCE, TRANSACTION_VALUE, TRANSACTION_TYPE) VALUES (?, ?, ?, ?, ?, ?)";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, t.getBankAccountId());
-			pstmt.setDate(2, t.getDate());
+			pstmt.setDate(2,java.sql.Date.valueOf(java.time.LocalDate.now()));
 			pstmt.setDouble(3, t.getPreviousBalance());
 			pstmt.setDouble(4, t.getNewBalance());
 			pstmt.setDouble(5, t.getValue());
@@ -79,6 +81,45 @@ public class TransactionDAOImpl implements TransactionDAO {
 		}
 
 		return false;
+		
+	}
+
+	@Override
+	public void withdraw(Transaction t) {
+		
+		CallableStatement cs = null;
+		
+		try(Connection con = ConnectionUtil.getConnectionFromFile(filename)){
+			
+			String sql = "{call SP_WITHDRAW(?,?)}";
+			cs = con.prepareCall(sql);
+			cs.setInt(1, t.getBankAccountId());
+			cs.setDouble(2, t.getValue());
+			log.info("Successful withdrawal of value " + t.getValue() + " from bank account id: " + t.getBankAccountId() );
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void deposit(Transaction t) {
+		
+		CallableStatement cs = null;
+		
+		try(Connection con = ConnectionUtil.getConnectionFromFile(filename)){
+			
+			String sql = "{call SP_DEPOSIT(?,?)}";
+			cs = con.prepareCall(sql);
+			cs.setInt(1, t.getBankAccountId());
+			cs.setDouble(2, t.getValue());
+			log.info("Successful deposit of value " + t.getValue() + " from bank account id: " + t.getBankAccountId() );
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
