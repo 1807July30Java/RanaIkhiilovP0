@@ -176,18 +176,6 @@ public class UserAccountDAOImpl implements UserAccountDAO{
 		return false;
 	}
 
-	@Override
-	public void createUser() {
-		UserAccount newUser = new UserAccount();
-		
-		
-	}
-
-	@Override
-	public void viewAllUsers() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public boolean updateUsername(String previousUserName, String newUserName) {
