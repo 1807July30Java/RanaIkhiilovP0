@@ -9,4 +9,5 @@ public interface TransactionDAO {
 	public boolean saveTransaction(Transaction t);
 	public void withdraw(Transaction t);
 	public void deposit(Transaction t);
+	public boolean deleteTransactions(int bankAccountID);
 }

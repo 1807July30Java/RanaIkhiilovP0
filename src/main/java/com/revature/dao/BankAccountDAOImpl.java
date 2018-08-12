@@ -149,5 +149,48 @@ public class BankAccountDAOImpl implements BankAccountDAO {
 		return;
 		
 	}
+	
+	@Override
+	public boolean deleteBankAccount(int userID) {
+		PreparedStatement pstmt = null;
+		try (Connection con = ConnectionUtil.getConnectionFromFile(filename)) {
+			
+			ArrayList<BankAccount> bankAccounts = new ArrayList<BankAccount>();
+			bankAccounts = getAllBankAccountsForUser(userID);
+			
+			if (!bankAccounts.isEmpty()) {
+				TransactionDAO userTransactions = new TransactionDAOImpl();
+				for (BankAccount b : bankAccounts) {
+					System.out.println("Deleting Bank Account with bank id: " + b.getId() + " for User Account with user id: " + userID);
+					userTransactions.deleteTransactions(b.getId());
+				}
+			}else {
+				System.out.println("No Existing Bank Accounts for User Account id " + userID);
+				return false;
+			}
+			
+			// use a prepared statement
+			String sql = "DELETE FROM BANK_ACCOUNT WHERE USER_ACCOUNT_ID = ? ";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, userID);
+			
+			if (pstmt.executeUpdate() > 0) {
+				log.info("Deleted bank account for user account with id "+ userID);
+				System.out.println("Deleted bank account for user account id "+ userID);
+				return true;
+			}
+			else {
+				log.info("No bank account found for user account with id "+ userID);
+				System.out.println("No bank account found for user account with id "+ userID);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
 
 }

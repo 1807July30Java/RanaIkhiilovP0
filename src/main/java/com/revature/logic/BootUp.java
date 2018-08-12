@@ -1,9 +1,14 @@
 package com.revature.logic;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import com.revature.beans.*;
 import com.revature.dao.*;
+import com.revature.util.ConnectionUtil;
 
 public class BootUp {
 	
@@ -16,7 +21,7 @@ public class BootUp {
 		Integer userChoice = -1;
 		// display menu for bank account options 
 		while(!exitCondition) {
-			System.out.println("Current Balance\t" + b.getCurrentBalance()
+			System.out.println("\nCurrent Balance\t" + b.getCurrentBalance()
 					+ "\n1) Withdraw"
 					+ "\n2) Deposit"
 					+ "\n3) View Transactions"
@@ -67,11 +72,14 @@ public class BootUp {
 					ArrayList<Transaction>allTransactions = new ArrayList<Transaction>();
 					TransactionDAO tDAO = new TransactionDAOImpl();
 					allTransactions = tDAO.accountTransactionHistory(b.getId());
-					System.out.println( "id \t\tdate \t\tpreviousBalance \tvalue \t\tnewBalance \ttype");
+					System.out.println( "\nid \t\tdate \t\tpreviousBalance \tvalue \t\tnewBalance \ttype");
 					for(Transaction currTransaction : allTransactions) {
 						System.out.println(currTransaction);
 					}
 					break;
+				case 4:
+					return false;
+					
 			}
 		}
 		
@@ -91,7 +99,7 @@ public class BootUp {
 		ArrayList<BankAccount> userBankAccounts = baDAO.getAllBankAccountsForUser(userID);
 		
 		while(!exitCondition) {
-			System.out.println("1) View and Access Exisitng Bank Accounts."
+			System.out.println("\n1) View and Access Exisitng Bank Accounts."
 					+ "\n2) Create New Bank Account"
 					+ "\n0) Exit");
 			userChoice = getInput(MENU_OPTIONS);
@@ -107,7 +115,7 @@ public class BootUp {
 						System.out.println("No bank accounts exist\n");
 						break;
 					}else {
-						System.out.println("Selection\tBank id\t\tBalance");
+						System.out.println("\nSelection\tBank id\t\tBalance");
 						for(BankAccount currAccount : userBankAccounts) {
 							System.out.println(count++ +")\t\t" +currAccount);
 						}
@@ -139,7 +147,7 @@ public class BootUp {
 		boolean isLoggedIn = false;
 		while(!exit && !isLoggedIn) {
 			
-			System.out.println("Welcome to revature bank");
+			System.out.println("\nWelcome to revature bank");
 			System.out.println("Enter numberical option on menu corresponding to your choice.");
 			System.out.println("1) Login\n2) Register\n0) Exit");
 		
@@ -197,6 +205,134 @@ public class BootUp {
 	}
 	
 	
+	public boolean updateUserMenu(int userAccID) {
+		
+		UserAccountDAO ua = new UserAccountDAOImpl();
+		UserAccount uaUpdate = new UserAccount();
+		uaUpdate = ua.getUserAccountById(userAccID);
+		UserAccountDAO updateDAO = new UserAccountDAOImpl();
+		boolean exit = false;
+		int input = 0;
+		while(!exit) {
+			
+			System.out.println("\nUpdating User Account Menu");
+			System.out.println("Enter numberical option on menu corresponding to your choice.");
+			System.out.println("1) Change username"
+					+ "\n2) Change Password"
+					+ "\n3) Make Super User"
+					+ "\n4) Return to Super User Menu"
+					+ "\n0) Exit");
+		
+			input = getInput(5);
+			switch(input) {
+				case 0:
+					exit = true;
+					System.out.println("Thank you for using Revature Bank!");
+					break;
+				case 1:
+					System.out.println("Please enter a username (up to 15 characters)");
+					String previousUserName = uaUpdate.getUsername();
+					String newUserName = getStringInput("username");
+					if(updateDAO.updateUsername(previousUserName, newUserName)) {
+						System.out.println("Updated username to: " + newUserName);
+						uaUpdate.setUsername(newUserName);
+					}
+					break;
+				case 2:
+					System.out.println("Please enter a password (up to 15 characters)");
+					String previousPassword = uaUpdate.getPassword();
+					String newPassword = getStringInput("password");
+					if(updateDAO.updatePassword(uaUpdate.getUsername(), previousPassword, newPassword)) {
+						System.out.println("Updated password to: " + newPassword);
+						uaUpdate.setPassword(newPassword);
+					}
+					break;
+				case 3:
+					if(updateDAO.makeSuperUser(uaUpdate.getId())) {
+						System.out.println("Updated user with user account id: " + uaUpdate.getId() + " to a super user");
+					}
+					break;
+				case 4:
+					return true;
+				
+			}
+		
+		}
+		
+		return false;
+	}
+	
+	public void SuperUserMenu() {
+		
+		boolean exit = false;
+		int input = 0;
+		while(!exit) {
+			
+			System.out.println("\nWelcome to revature bank");
+			System.out.println("Enter numberical option on menu corresponding to your choice.");
+			System.out.println("1) View all Existing Users"
+					+ "\n2) Update User Account"
+					+ "\n3) Create User Account"
+					+ "\n4) Delete User Account"
+					+ "\n0) Exit");
+		
+			input = getInput(5);
+			switch(input) {
+				case 0:
+					exit = true;
+					System.out.println("Thank you for using Revature Bank!");
+					break;
+				case 1:
+					UserAccountDAO user = new UserAccountDAOImpl();
+					ArrayList<UserAccount> allUsers = new ArrayList<UserAccount>();
+					allUsers = (ArrayList<UserAccount>) user.getUsers();
+					
+					int count = 1;
+					if(allUsers.isEmpty()) {
+						System.out.println("No existing users currently exist.");
+					}
+					else {
+						
+						for(UserAccount u : allUsers) {
+							System.out.println(count++ +") " + u);
+						}
+					}
+					break;
+				case 2:
+					System.out.println("Enter the User ID of the user account you would like to update: ");
+					int userIDUpdate = getInput(99999);
+					if(updateUserMenu(userIDUpdate)) {
+						
+					}
+					break;
+				case 3: 
+					System.out.println("Please enter a username (up to 15 characters)");
+					String username = getStringInput("username");
+					System.out.println("Please enter your password (up to 15 characters)");
+					String password = getStringInput("password");
+						
+					UserAccount register = new UserAccount(username, password);
+					UserAccountDAOImpl registerDAO = new UserAccountDAOImpl();
+					
+					System.out.println("Checking Account Validity...");
+					if(registerDAO.saveUserAccount(register)) {
+						System.out.println("New user created.");
+						registerDAO.isExistingUser(register);
+					}
+					break;
+				case 4:
+					System.out.println("Enter the User ID of the user account you would like to delete: ");
+					int userID = getInput(99999);
+					UserAccountDAO ua = new UserAccountDAOImpl();
+					ua.deleteUser(userID);
+					break;
+			}
+		
+		}
+		
+	}
+	
+	
 	public int getInput(int maxInput) {
 		
 		String input = "";
@@ -207,7 +343,7 @@ public class BootUp {
 			try {
 				Scanner scanner = new Scanner(System.in);
 				if (scanner.hasNextLine()) {
-				input = scanner.nextLine();
+					input = scanner.nextLine();
 				}
 				else {
 					System.out.println("bug is here");
@@ -219,13 +355,11 @@ public class BootUp {
 					inputStatus = true;
 				}
 				else {
-					System.out.println("Please enter a valid numerical input231231");
-					break;
+					System.out.println("Please enter a numerical input");
 				}
 			}catch(Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 				System.out.println("Please enter a valid numerical input");
-				break;
 			}
 			
 		}
@@ -251,10 +385,9 @@ public class BootUp {
 				
 			}catch(Exception e) {
 				System.out.println("Please enter a valid " + type);
-				e.printStackTrace();
-				break;
+				//e.printStackTrace();
 			}
-//			System.out.println(input);
+
 			
 			
 		}
@@ -282,13 +415,11 @@ public class BootUp {
 					inputStatus = true;
 				}
 				else {
-					System.out.println("Please enter a valid numerical input231231");
-					break;
+					System.out.println("Please enter a valid numerical input");
 				}
 			}catch(Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 				System.out.println("Please enter a valid numerical input");
-				break;
 			}
 			
 		}

@@ -20,10 +20,15 @@ public class Driver {
 		UserAccount user = new UserAccount();
 		user = boot.init();
 		
-		if (user != null){
+		if (user != null && user.getUserSuper() == 0){
 			boot.loginMenu(user);
 		}
-		
+		else if(user != null && user.getUserSuper() == 1) {
+			boot.SuperUserMenu();
+		}
+//		
+//		UserAccountDAO temp = new UserAccountDAOImpl();
+//		temp.deleteUser(65);
 		//System.out.println(boot.getNumInput());
 		
 	}

@@ -11,4 +11,11 @@ public interface UserAccountDAO {
 	public boolean saveUserAccount(UserAccount u);
 	public boolean isExistingUser(UserAccount u);
 	
+	//Super User functionality
+	public boolean deleteUser(int userID);
+	public void createUser();
+	public void viewAllUsers();
+	public boolean updateUsername(String previousUserName, String newUserName);
+	public boolean updatePassword(String userName, String previousPassword, String newPassword);
+	public boolean makeSuperUser(int userAccId);
 }

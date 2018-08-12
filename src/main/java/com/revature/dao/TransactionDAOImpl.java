@@ -122,5 +122,30 @@ public class TransactionDAOImpl implements TransactionDAO {
 		}
 		
 	}
+	
+	@Override
+	public boolean deleteTransactions(int bankAccountID) {
+		PreparedStatement pstmt = null;
+		try (Connection con = ConnectionUtil.getConnectionFromFile(filename)) {
+			
+			String sql = "DELETE FROM TRANSACTION WHERE BANK_ACCOUNT_ID = ? ";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, bankAccountID);
+			
+			if (pstmt.executeUpdate() > 0) {
+				log.info("Deleted all transactions for bank account with id "+ bankAccountID);
+				return true;
+			} else {
+				log.info("No transactions found for bank account with id "+ bankAccountID);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
 
 }
