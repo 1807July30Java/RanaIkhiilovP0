@@ -15,6 +15,15 @@ public class BootUp {
 	private static int MENU_OPTIONS = 3;
 	private static int BANK_MENU_OPTIONS = 4;
 	
+	
+	/*
+	 *  In the bank account menu you are able to withdraw, deposit, view transaction history
+	 *  as well as returning back to the account menu where you are able to select another bank account.
+	 *  You cannot withdraw if the balance is less than the amount you entered. The transaction history
+	 *  contains the transaction id, date, previous balance, current balance, value of transaction, as well as 
+	 *  the type of transaction (W - withdraw, D - deposit).
+	 *  
+	 */
 	public boolean bankAccountMenu(BankAccount b) {
 		
 		boolean exitCondition = false;
@@ -86,6 +95,16 @@ public class BootUp {
 		
 		return false;
 	}
+	
+	/*
+	 * loginMenu(UserAccount u)
+	 * 
+	 * This is the login menu, after a regular user logs in (there is a different menu called
+	 * if the user is a super user. New registered accounts start with no bank accounts. You
+	 * are given the option to create a new bank account, and view all bank accounts linked to your 
+	 * account. Once a bank account is selected you will move onto the bank account menu.
+	 * 
+	 */
 	public void loginMenu(UserAccount u) {
 		
 		
@@ -137,6 +156,18 @@ public class BootUp {
 		}
 	}
 	
+	
+	
+	/*
+	 * Useraccount init()
+	 * 
+	 * This is the initial call made from the driver, that displays the default menu,
+	 * you are able to login, or register for an account. Registering for an account,
+	 * will ask for a username and password will be stored by first checking if the username 
+	 * is unique within the database, and if it is it will be created and you will be launched into
+	 * the login menu, else the console will ask you to enter a unique username. 
+	 * 
+	 */
 	
 	public UserAccount init() {
 		
@@ -348,6 +379,10 @@ public class BootUp {
 		
 	}
 	
+	
+	/*
+	 *  
+	 */
 	
 	public int getInput(int maxInput) {
 		
