@@ -145,9 +145,25 @@ public class BootUp {
 		String username = "";
 		String password = "";
 		boolean isLoggedIn = false;
+		
+		
+		System.out.println("\n__        _______ _     ____ ___  __  __ _____   _____ ___  \r\n" + 
+				"\\ \\      / / ____| |   / ___/ _ \\|  \\/  | ____| |_   _/ _ \\ \r\n" + 
+				" \\ \\ /\\ / /|  _| | |  | |  | | | | |\\/| |  _|     | || | | |\r\n" + 
+				"  \\ V  V / | |___| |__| |__| |_| | |  | | |___    | || |_| |\r\n" + 
+				"   \\_/\\_/  |_____|_____\\____\\___/|_|  |_|_____|   |_| \\___/ \r\n" + 
+				"                                                            \r\n" + 
+				" ____  _______     ___  _____ _   _ ____  _____   ____    _    _   _ _  ___ \r\n" + 
+				"|  _ \\| ____\\ \\   / / \\|_   _| | | |  _ \\| ____| | __ )  / \\  | \\ | | |/ / |\r\n" + 
+				"| |_) |  _|  \\ \\ / / _ \\ | | | | | | |_) |  _|   |  _ \\ / _ \\ |  \\| | ' /| |\r\n" + 
+				"|  _ <| |___  \\ V / ___ \\| | | |_| |  _ <| |___  | |_) / ___ \\| |\\  | . \\|_|\r\n" + 
+				"|_| \\_\\_____|  \\_/_/   \\_\\_|  \\___/|_| \\_\\_____| |____/_/   \\_\\_| \\_|_|\\_(_)");
+		
+		System.out.println("\n\n");
+		
+		
+		
 		while(!exit && !isLoggedIn) {
-			
-			System.out.println("\nWelcome to revature bank");
 			System.out.println("Enter numberical option on menu corresponding to your choice.");
 			System.out.println("1) Login\n2) Register\n0) Exit");
 		
@@ -226,9 +242,9 @@ public class BootUp {
 			input = getInput(5);
 			switch(input) {
 				case 0:
-					exit = true;
 					System.out.println("Thank you for using Revature Bank!");
-					break;
+					return true;
+					
 				case 1:
 					System.out.println("Please enter a username (up to 15 characters)");
 					String previousUserName = uaUpdate.getUsername();
@@ -302,7 +318,7 @@ public class BootUp {
 					System.out.println("Enter the User ID of the user account you would like to update: ");
 					int userIDUpdate = getInput(99999);
 					if(updateUserMenu(userIDUpdate)) {
-						
+						exit = true;
 					}
 					break;
 				case 3: 

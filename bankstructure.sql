@@ -9,6 +9,7 @@ CREATE TABLE USER_ACCOUNT(
 );
 /
 
+insert into user_account (username,password, user_account_super) values ('admin', 'pass', 1)
 
 -- create admin
 INSERT INTO USER_ACCOUNT
